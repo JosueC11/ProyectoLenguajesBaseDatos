@@ -1,12 +1,14 @@
 using ProyectoLenguajesBaseDatos.OracleDbContext;
+using ProyectoLenguajesBaseDatos.Service.ServiceImplement;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Add sericices DB and interface => Singleton 
 builder.Services.AddSingleton<Context>(options => new Context(builder.Configuration.GetConnectionString("Connection")));
-
+builder.Services.AddSingleton<NoticiaImplement>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,6 +28,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Noticia}/{action=Listado}/{id?}");
 
 app.Run();

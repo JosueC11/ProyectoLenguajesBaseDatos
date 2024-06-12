@@ -12,20 +12,9 @@ namespace ProyectoLenguajesBaseDatos.OracleDbContext
             _connection = new OracleConnection(connectionString);
         }
 
-        public void Open() 
+        public OracleConnection GetConnection() 
         { 
-            if(_connection.State != ConnectionState.Open) 
-            { 
-                _connection.Open();
-            }
-        }
-
-        public void Close()
-        {
-            if(_connection.State != ConnectionState.Closed) 
-            { 
-                _connection.Close();
-            }
+            return _connection;
         }
     }
 }
