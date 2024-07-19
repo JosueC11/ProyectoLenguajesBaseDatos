@@ -1,7 +1,28 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Listado";
 }
 
-<h1>Listado</h1>
+<div> 
+    <h1 style="margin-top: 40px; margin-bottom: 40px;">Noticias</h1>
+    <button style="margin-bottom: 40px" type="button" class="btn btn-outline-primary">Nueva Noticia</button>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+        @for(var i = 0; i < 11; i++)
+        {
+            <div class="card" style="width: 18rem;">
+                <img src="https://png.pngtree.com/thumb_back/fh260/background/20230611/pngtree-wolf-animals-images-wallpaper-for-pc-384x480-image_2916211.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <div style="display: flex; gap: 10px;">
+                        <a href="#" class="btn btn-warning">Editar</a>
+                        <a href="#" class="btn btn-danger">Eliminar</a>
+                    </div>
+                </div>
+            </div>         
+        }
+    </div>
+</div>
+
+
+
 
