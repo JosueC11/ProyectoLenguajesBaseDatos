@@ -4,9 +4,11 @@
 
 <div> 
     <h1 style="margin-top: 40px; margin-bottom: 40px;">Noticias</h1>
-    <button style="margin-bottom: 40px" type="button" class="btn btn-outline-primary">Nueva Noticia</button>
+    <button style="margin-bottom: 20px;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-noticia">
+        Nueva Noticia
+    </button>
     <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-        @for(var i = 0; i < 11; i++)
+        @for(var i = 0; i < 2; i++)
         {
             <div class="card" style="width: 18rem;">
                 <img src="https://png.pngtree.com/thumb_back/fh260/background/20230611/pngtree-wolf-animals-images-wallpaper-for-pc-384x480-image_2916211.jpg" class="card-img-top" alt="...">
@@ -20,6 +22,31 @@
                 </div>
             </div>         
         }
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="add-noticia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <label for="floatingInput">Email address</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                        <label for="floatingPassword">Password</label>
+                    </div>                  
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
