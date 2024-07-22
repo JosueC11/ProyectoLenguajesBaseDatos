@@ -19,5 +19,10 @@ namespace ProyectoLenguajesBaseDatos.Controllers
             var noticias = _noticiaImplement.GetNoticias();
             return View();
         }
+
+        public ActionResult Historial() 
+        {
+            return View();
+        }
     }
 }

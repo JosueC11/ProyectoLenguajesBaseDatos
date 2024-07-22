@@ -17,6 +17,16 @@ html {
   min-height: 100%;
 }
 
-body {
-  margin-bottom: 60px;
+.bg-menu-color {
+    background-color: #e0e0e0;
 }
+
+.menu-size {
+    width: 230px;
+    height: 100vh;
+}
+
+.gap {
+    gap: 20px;
+}
+
