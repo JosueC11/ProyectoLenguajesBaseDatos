@@ -3,28 +3,56 @@
 }
 
 <div> 
-    <h1 class="mt-5 mb-4">Noticias</h1>
-    <button class="btn btn-primary mb-4" type="button" data-bs-toggle="modal" data-bs-target="#add-noticia">
-        Nueva Noticia
-    </button>
+    <div class="d-flex flex-column align-items-center">
+        <h1 class="mt-5 mb-4">Noticias</h1>
+    </div>
+    <div class="d-flex flex-row gap mb-5">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-filter"></i> Filtros
+            </button>
+            <ul class="dropdown-menu">
+                <li><button class="dropdown-item" type="button">Vistas</button></li>
+                <li><button class="dropdown-item" type="button">Comentadas</button></li>
+                <li><button class="dropdown-item" type="button">Compartidas</button></li>
+            </ul>
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-filter"></i> Temas
+            </button>
+            <ul class="dropdown-menu">
+                <li><button class="dropdown-item" type="button">Tema 1</button></li>
+                <li><button class="dropdown-item" type="button">Tema 2</button></li>
+                <li><button class="dropdown-item" type="button">Tema 3</button></li>
+            </ul>
+        </div>
+    </div>
     <div class="d-flex flex-wrap gap mb-5">
-        @for(var i = 0; i < 30; i++)
+        @for(var i = 0; i < 5; i++)
         {
-            <div class="card" style="width: 18rem;">
-                <img src="https://png.pngtree.com/thumb_back/fh260/background/20230611/pngtree-wolf-animals-images-wallpaper-for-pc-384x480-image_2916211.jpg" class="card-img-top" alt="...">
+            <div class="card shadow-lg" style="width: 350px;">
+                <img src="https://i.ytimg.com/vi/LtltiTYHW3E/maxresdefault.jpg" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <div class="d-flex flex-row gap">
+                        <p class="card-text">Internacionales</p>
+                        <p class="card-text">América Latina</p>
+                    </div>
+                    <h5 class="card-title">Nueva ley en el Congreso</h5>
+                    <h6 class="card-title">Se aprueba nueva ley en el Congreso</h6>
+                    <p class="card-text">El Congreso ha aprobado una nueva ley que...</p>
+                    <p class="card-text">18-03-2023</p>
                     <div class="d-flex gap">
-                        <a href="#" class="btn btn-warning">Editar</a>
-                        <a href="#" class="btn btn-danger">Eliminar</a>
+                        <a href="#" class="btn btn-primary"><i class="bi bi-chat-dots"></i> Comentar</a>
+                        <a href="#" class="btn btn-primary"><i class="bi bi-star-half"></i> Calificar</a>
+                        <a href="#" class="btn btn-primary"><i class="bi bi-share"></i> Compartir</a>
                     </div>
                 </div>
             </div>         
         }
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="add-noticia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade shadow-lg" id="add-noticia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

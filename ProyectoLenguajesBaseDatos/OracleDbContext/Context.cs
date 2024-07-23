@@ -1,5 +1,4 @@
 ﻿using Oracle.ManagedDataAccess.Client;
-using System.Data;
 
 namespace ProyectoLenguajesBaseDatos.OracleDbContext
 {

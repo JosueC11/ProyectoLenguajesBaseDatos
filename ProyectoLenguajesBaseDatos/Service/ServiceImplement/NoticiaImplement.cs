@@ -21,13 +21,24 @@ namespace ProyectoLenguajesBaseDatos.Service.ServiceImplement
             {
                 using (OracleConnection connection = _context.GetConnection())
                 {
-                    using (OracleCommand cmd = new OracleCommand("ObtenerRegistros", connection))
+                    using (OracleCommand cmd = new OracleCommand("SP_LISTAR_NOTICIAS", connection))
                     {
-                        var registros = new OracleParameter();
-                        registros.ParameterName = "registros";
-                        registros.OracleDbType = OracleDbType.RefCursor;
-                        registros.Direction = ParameterDirection.Output;
-                        cmd.Parameters.Add(registros);
+                        var cantidadNoticas = new OracleParameter
+                        {
+                            ParameterName = "CANT_NOTICIAS",
+                            OracleDbType = OracleDbType.Int32,
+                            Value = 15,
+                            Direction = ParameterDirection.Input
+                        };
+                        cmd.Parameters.Add(cantidadNoticas);
+
+                        var listaNoticias = new OracleParameter
+                        {
+                            ParameterName = "LISTA_NOTICIAS",
+                            OracleDbType = OracleDbType.RefCursor,
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(listaNoticias);
 
                         connection.Open();
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -36,17 +47,20 @@ namespace ProyectoLenguajesBaseDatos.Service.ServiceImplement
 
                         while (reader.Read())
                         {
-                            var noticia = new Noticia();
-
-                            noticia.Id = Convert.ToInt32(reader["ID_NOTICIA"]);
-                            noticia.Title = reader["TITLE"].ToString();
-                            noticia.Description = reader["DESCRIPTION"].ToString();
-                            noticia.PostedAt = Convert.ToDateTime(reader["POSTEDAT"]);
+                            var noticia = new Noticia
+                            {
+                                IdNoticia = Convert.ToInt32(reader["ID_NOTICIA"]),
+                                IdTema = Convert.ToInt32(reader["ID_TEMA"]),
+                                CorreoUsuarioCreador = reader["CORREO_USUARIO_CREADOR"].ToString(),
+                                Titulo = reader["TITULO"].ToString(),
+                                Sinopsis = reader["SINOPSIS"].ToString(),
+                                Descripcion = reader["DESCRIPCION"].ToString(),
+                                Visitas = Convert.ToInt32(reader["VISITAS"]),
+                                FechaPost = Convert.ToDateTime(reader["FECHA_POST"])
+                            };
 
                             noticias.Add(noticia);
                         }
-
-                        connection.Close();
                     }
                 }
                 return noticias;

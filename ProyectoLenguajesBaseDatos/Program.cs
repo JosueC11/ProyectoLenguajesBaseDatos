@@ -7,8 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Add sericices DB and interface => Singleton 
-builder.Services.AddSingleton<Context>(options => new Context(builder.Configuration.GetConnectionString("Connection")));
-builder.Services.AddSingleton<NoticiaImplement>();
+builder.Services.AddScoped<Context>(options => new Context(builder.Configuration.GetConnectionString("Connection")));
+builder.Services.AddScoped<NoticiaImplement>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

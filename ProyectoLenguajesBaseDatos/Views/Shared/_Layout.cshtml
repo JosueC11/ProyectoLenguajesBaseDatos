@@ -12,30 +12,30 @@
 </head>
 <body>
     <div class="d-flex">
-        <div class="pt-5 bg-menu-color menu-size" style="position: fixed;">
+        <div class="pt-5 bg-menu-color menu-size position-fixed shadow-lg">
             <h2 class="text-center mb-4">Menú</h2>
             <nav>
                 <ul class="align-content-center nav flex-column gap">
                     <li class="nav-item">
-                        <a asp-controller="Home" asp-action="Home" class="nav-link active">Inicio</a>
+                        <a class="nav-link active" asp-controller="Home" asp-action="Home">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a asp-controller="Noticia" asp-action="Listado" class="nav-link active">Noticias</a>
+                        <a class="nav-link active" asp-controller="Noticia" asp-action="Listado">Noticias</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active">Mis Noticias</a>
+                        <a class="nav-link active" asp-controller="Noticia" asp-action="MisNoticias">Mis Noticias</a>
                     </li>
                     <li class="nav-item">
-                        <a asp-controller="Noticia" asp-action="Historial" class="nav-link active">Historial Noticias</a>
+                        <a class="nav-link active" asp-controller="Noticia" asp-action="Historial">Historial Noticias</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active">Perfil</a>
+                        <a class="nav-link active" asp-controller="Noticia" asp-action="Historial">Perfil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active">Registrarse</a>
+                        <a class="nav-link active" asp-controller="User" asp-action="SingUp">Registrarse</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active">Iniciar Sesión</a>
+                        <a class="nav-link active" asp-controller="User" asp-action="Login">Iniciar Sesión</a>
                     </li>    
                 </ul>
             </nav>

@@ -20,6 +20,13 @@ namespace ProyectoLenguajesBaseDatos.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult MisNoticias()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public ActionResult Historial() 
         {
             return View();

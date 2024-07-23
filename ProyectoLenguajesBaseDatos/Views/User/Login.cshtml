@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="d-flex flex-column align-items-center mt-5 mb-3">
+    <h3 class="mt-5 mb-5">Ingresa al portal de noticias para publicar y compartir sus noticias favoritas</h3>
+    <form class="d-flex flex-column gap bg-menu-color p-4 rounded shadow-lg">
+        <div class="d-flex justify-content-end">
+            <i class="bi bi-box-arrow-in-right"></i>
+        </div>
+        <div class="flex-row">
+            <label for="inputEmail" class="form-label">Email</label>
+            <input type="email" class="form-control" id="inputEmail" placeholder="Correo">
+        </div>
+        <div class="flex-row">
+            <label for="inputPassword" class="form-label">Password</label>
+            <input type="password" class="form-control" id="inputPassword" placeholder="Contraseña">
+        </div>
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-success">Iniciar Sesión</button>
+        </div>
+    </form>
+</div>
+
