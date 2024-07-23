@@ -1,10 +1,12 @@
 ﻿
 @{
-    ViewData["Title"] = "MisNoticias";
+    ViewData["Title"] = "Mis Noticias";
 }
 
 <div>
-    <h1 class="mt-5 mb-4">Noticias</h1>
+    <div class="d-flex flex-column align-items-center">
+        <h1 class="mt-5 mb-4">Noticias</h1>
+    </div>
     <button class="btn btn-primary mb-4" type="button" data-bs-toggle="modal" data-bs-target="#add-noticia">
         <i class="bi bi-plus-lg"></i> Nueva Noticia
     </button>
@@ -12,7 +14,7 @@
         @for (var i = 0; i < 5; i++)
         {
             <div class="card shadow-lg" style="width: 18rem;">
-                <img src="https://i.ytimg.com/vi/LtltiTYHW3E/maxresdefault.jpg" class="card-img-top" alt="...">
+                <img src="/img/noticia.png" class="card-img-top" alt="...">
                 <div class="card-body">
                     <div class="d-flex flex-row gap">
                         <p class="card-text">Internacionales</p>
