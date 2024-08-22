@@ -5,31 +5,37 @@
 
 <div class="d-flex flex-column align-items-center mt-5 mb-3">
     <h3 class="mt-5 mb-5">Puedes registrarse al portal de noticias para publicar y compartir sus noticias favoritas</h3>
-    <form class="d-flex flex-column gap bg-menu-color p-4 rounded shadow-lg">
+    <form asp-controller="User" asp-action="SetSingUp" method="post" class="d-flex flex-column gap bg-menu-color p-4 rounded shadow-lg">
         <div class="d-flex justify-content-end">
             <i class="bi bi-person-lines-fill"></i>
         </div>
         <div class="d-flex justify-content-around flex-row gap">
             <div class="d-flex justify-content-around flex-column">
                 <label for="inputName" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="inputName" placeholder="Escriba su nombre">
+                <input type="text" class="form-control" id="inputName" name="nombre" placeholder="Escriba su nombre" required>
             </div>
             <div class="d-flex justify-content-around flex-column">
                 <label for="inputApellido" class="form-label">Apellido</label>
-                <input type="text" class="form-control" id="inputApellido" placeholder="Escriba su apellido">
+                <input type="text" class="form-control" id="inputApellido" name="apellido" placeholder="Escriba su apellido" required>
             </div>
         </div>
         <div class="flex-row">
             <label for="inputEmail" class="form-label">Email</label>
-            <input type="email" class="form-control" id="inputEmail" placeholder="Correo">
+            <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Correo" required>
         </div>
         <div class="flex-row">
             <label for="inputPassword" class="form-label">Password</label>
-            <input type="password" class="form-control" id="inputPassword" placeholder="Contraseña">
+            <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Contraseña" required>
         </div>
         <div class="d-flex justify-content-center">
             <button type="submit" class="btn btn-success">Registrarse</button>
         </div>
+        @if(Model == 0)
+        {
+            <div class="d-flex justify-content-center">
+                <label for="credenciales" class="form-label text-danger">Email ya registrado!</label>
+            </div>
+        }
     </form>
 </div>
 

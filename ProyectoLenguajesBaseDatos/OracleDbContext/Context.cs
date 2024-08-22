@@ -4,16 +4,16 @@ namespace ProyectoLenguajesBaseDatos.OracleDbContext
 {
     public class Context
     {
-        private readonly OracleConnection _connection;
+        private readonly string _connectionString;
 
         public Context(string connectionString) 
         { 
-            _connection = new OracleConnection(connectionString);
+            _connectionString = connectionString;
         }
 
         public OracleConnection GetConnection() 
         { 
-            return _connection;
+            return new OracleConnection(_connectionString);
         }
     }
 }

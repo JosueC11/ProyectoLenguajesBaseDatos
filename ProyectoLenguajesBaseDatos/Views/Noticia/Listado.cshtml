@@ -1,4 +1,6 @@
-﻿@{
+﻿@model ModelNoticiasTemas
+
+@{
     ViewData["Title"] = "Noticias";
 }
 
@@ -6,15 +8,26 @@
     <div class="d-flex flex-column align-items-center">
         <h1 class="mt-5 mb-4">Noticias</h1>
     </div>
+    <a class="dropdown-item" asp-controller="User" asp-action="Login">Login</a>
+    <a class="dropdown-item" asp-controller="User" asp-action="SingUp">Login</a>
     <div class="d-flex flex-row gap mb-5">
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-filter"></i> Filtros
             </button>
             <ul class="dropdown-menu">
-                <li><button class="dropdown-item" type="button">Vistas</button></li>
-                <li><button class="dropdown-item" type="button">Comentadas</button></li>
-                <li><button class="dropdown-item" type="button">Compartidas</button></li>
+                <li>
+                    <a class="dropdown-item" asp-controller="Noticia" asp-action="FiltrarNoticiasCriterio" asp-route-selectedCriterio="Enviadas">Enviadas</a>
+                </li>
+                <li>
+                    <a class="dropdown-item" asp-controller="Noticia" asp-action="FiltrarNoticiasCriterio" asp-route-selectedCriterio="Comentadas">Comentadas</a>
+                </li>
+                <li>
+                    <a class="dropdown-item" asp-controller="Noticia" asp-action="FiltrarNoticiasCriterio" asp-route-selectedCriterio="Calificadas">Calificadas</a>
+                </li>
+                <li>
+                    <a class="dropdown-item" asp-controller="Noticia" asp-action="FiltrarNoticiasCriterio" asp-route-selectedCriterio="Vistas">Vistas</a>
+                </li>
             </ul>
         </div>
         <div class="dropdown">
@@ -22,21 +35,24 @@
                 <i class="bi bi-filter"></i> Temas
             </button>
             <ul class="dropdown-menu">
-                <li><button class="dropdown-item" type="button">Tema 1</button></li>
-                <li><button class="dropdown-item" type="button">Tema 2</button></li>
-                <li><button class="dropdown-item" type="button">Tema 3</button></li>
+                @foreach(var tema in Model.Temas)
+                {
+                    <li>
+                        <a class="dropdown-item" asp-controller="Noticia" asp-action="FiltrarNoticiasTema" asp-route-selectedTema="@tema.Titulo">@tema.Titulo</a>
+                    </li>
+                }                  
             </ul>
         </div>
     </div>
     <div class="d-flex flex-wrap gap mb-5">
-        @for(var i = 0; i < 5; i++)
+        @foreach (var noticia in Model.Noticias)
         {
             <div class="card shadow-lg" style="width: 350px;">
                 <img src="/img/noticia.png" class="card-img-top" alt="...">
                 <div class="card-body">
                     <div class="d-flex flex-row gap">
-                        <p class="card-text">Internacionales</p>
-                        <p class="card-text">América Latina</p>
+                        <p class="card-text">@noticia.Tema.Titulo</p>
+                        <p class="card-text">@noticia.SubTema.Titulo</p>
                     </div>
                     <h5 class="card-title">Nueva ley en el Congreso</h5>
                     <h6 class="card-title">Se aprueba nueva ley en el Congreso</h6>
