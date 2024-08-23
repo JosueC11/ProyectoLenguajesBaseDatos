@@ -10,7 +10,6 @@ namespace ProyectoLenguajesBaseDatos.Controllers
         [HttpGet]
         public IActionResult Home() 
         {
-            HttpContext.Session.SetString("Emal", "jcastillor@gmail.com");
             return View();
         }
 

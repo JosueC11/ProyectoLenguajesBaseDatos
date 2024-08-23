@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis.Elfie.Serialization;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using Oracle.ManagedDataAccess.Client;
 using ProyectoLenguajesBaseDatos.Models;
 using ProyectoLenguajesBaseDatos.OracleDbContext;
@@ -129,19 +130,190 @@ namespace ProyectoLenguajesBaseDatos.Service.ServiceImplement
             throw new NotImplementedException();
         }
 
-        public void CalificarNoticia(int calificaion, int id)
+        public int CalificarNoticia(int idNoticia, int calificaion, string correo)
         {
-            throw new NotImplementedException();
+            var resultado = 0;
+
+            try
+            {
+                using (OracleConnection connection = _context.GetConnection())
+                {
+                    using (OracleCommand cmd = new OracleCommand("SP_REGISTRAR_CALIFICACION_NOTICIA", connection))
+                    {
+                        var idNoticiaParam = new OracleParameter
+                        {
+                            ParameterName = "ID_NOTICIA",
+                            OracleDbType = OracleDbType.Int32,
+                            Direction = ParameterDirection.Input,
+                            Value = idNoticia
+                        };
+                        cmd.Parameters.Add(idNoticiaParam);
+
+                        var correoParam = new OracleParameter
+                        {
+                            ParameterName = "CORREO_USUARIO",
+                            OracleDbType = OracleDbType.Varchar2,
+                            Direction = ParameterDirection.Input,
+                            Value = correo
+                        };
+                        cmd.Parameters.Add(correoParam);
+
+                        var calificacionParam = new OracleParameter
+                        {
+                            ParameterName = "CALIFICACION",
+                            OracleDbType = OracleDbType.Int32,
+                            Direction = ParameterDirection.Input,
+                            Value = calificaion
+                        };
+                        cmd.Parameters.Add(calificacionParam);
+
+                        var resultadoParam = new OracleParameter
+                        {
+                            ParameterName = "RESULTADO",
+                            OracleDbType = OracleDbType.Int32,
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(resultadoParam);
+
+                        connection.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.ExecuteNonQuery();
+
+                        resultado = ((Oracle.ManagedDataAccess.Types.OracleDecimal)resultadoParam.Value).ToInt32();
+                    }
+                }
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return resultado;
+            }
         }
 
-        public void ComentarNoticia(string comentario, int id)
+        public int ComentarNoticia(int idNoticia, string comentario, string correo)
         {
-            throw new NotImplementedException();
+            var resultado = 0;
+
+            try
+            {
+                using (OracleConnection connection = _context.GetConnection())
+                {
+                    using (OracleCommand cmd = new OracleCommand("SP_REGISTRAR_COMENTARIO_NOTICIA", connection))
+                    {
+                        var idNoticiaParam = new OracleParameter
+                        {
+                            ParameterName = "ID_NOTICIA_IN",
+                            OracleDbType = OracleDbType.Int32,
+                            Direction = ParameterDirection.Input,
+                            Value = idNoticia
+                        };
+                        cmd.Parameters.Add(idNoticiaParam);
+
+                        var correoParam = new OracleParameter
+                        {
+                            ParameterName = "CORREO_USUARIO_IN",
+                            OracleDbType = OracleDbType.Varchar2,
+                            Direction = ParameterDirection.Input,
+                            Value = correo
+                        };
+                        cmd.Parameters.Add(correoParam);
+
+                        var comentarioParam = new OracleParameter
+                        {
+                            ParameterName = "COMENTARIO_IN",
+                            OracleDbType = OracleDbType.Varchar2,
+                            Direction = ParameterDirection.Input,
+                            Value = comentario
+                        };
+                        cmd.Parameters.Add(comentarioParam);
+
+                        var resultadoParam = new OracleParameter
+                        {
+                            ParameterName = "RESULTADO",
+                            OracleDbType = OracleDbType.Int32,
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(resultadoParam);
+
+                        connection.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.ExecuteNonQuery();
+
+                        resultado = ((Oracle.ManagedDataAccess.Types.OracleDecimal)resultadoParam.Value).ToInt32();
+                    }
+                }
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return resultado;
+            }
         }
 
-        public void CompartirNoticia(string correoDestino, int id)
+        public int CompartirNoticia(int idNoticia,string correoEnvia, string correoDestino)
         {
-            throw new NotImplementedException();
+            var resultado = 0;
+
+            try
+            {
+                using (OracleConnection connection = _context.GetConnection())
+                {
+                    using (OracleCommand cmd = new OracleCommand("SP_REGISTRAR_COMPARTIR_NOTICIA", connection))
+                    {
+                        var idNoticiaParam = new OracleParameter
+                        {
+                            ParameterName = "ID_NOTICIA_IN",
+                            OracleDbType = OracleDbType.Int32,
+                            Direction = ParameterDirection.Input,
+                            Value = idNoticia
+                        };
+                        cmd.Parameters.Add(idNoticiaParam);
+
+                        var correoDestinoParam = new OracleParameter
+                        {
+                            ParameterName = "CORREO_USUARIO_DESTINO_IN",
+                            OracleDbType = OracleDbType.Varchar2,
+                            Direction = ParameterDirection.Input,
+                            Value = correoDestino
+                        };
+                        cmd.Parameters.Add(correoDestinoParam);
+
+                        var correoEnviaParam = new OracleParameter
+                        {
+                            ParameterName = "CORREO_USUARIO_DESTINO_IN",
+                            OracleDbType = OracleDbType.Varchar2,
+                            Direction = ParameterDirection.Input,
+                            Value = correoEnvia
+                        };
+                        cmd.Parameters.Add(correoEnviaParam);
+
+                        var resultadoParam = new OracleParameter
+                        {
+                            ParameterName = "RESULTADO",
+                            OracleDbType = OracleDbType.Int32,
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(resultadoParam);
+
+                        connection.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.ExecuteNonQuery();
+
+                        resultado = ((Oracle.ManagedDataAccess.Types.OracleDecimal)resultadoParam.Value).ToInt32();
+                    }
+                }
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return resultado;
+            }
         }
 
         public List<Noticia> FiltrarNoticiasTema(string filtro)

@@ -2,32 +2,25 @@
 
 @{
     ViewData["Title"] = "Noticias";
+    string[] filtros = { "Enviadas", "Comentadas", "Calificadas", "Vistas" };
 }
 
 <div> 
     <div class="d-flex flex-column align-items-center">
         <h1 class="mt-5 mb-4">Noticias</h1>
     </div>
-    <a class="dropdown-item" asp-controller="User" asp-action="Login">Login</a>
-    <a class="dropdown-item" asp-controller="User" asp-action="SingUp">Login</a>
     <div class="d-flex flex-row gap mb-5">
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-filter"></i> Filtros
             </button>
             <ul class="dropdown-menu">
-                <li>
-                    <a class="dropdown-item" asp-controller="Noticia" asp-action="FiltrarNoticiasCriterio" asp-route-selectedCriterio="Enviadas">Enviadas</a>
-                </li>
-                <li>
-                    <a class="dropdown-item" asp-controller="Noticia" asp-action="FiltrarNoticiasCriterio" asp-route-selectedCriterio="Comentadas">Comentadas</a>
-                </li>
-                <li>
-                    <a class="dropdown-item" asp-controller="Noticia" asp-action="FiltrarNoticiasCriterio" asp-route-selectedCriterio="Calificadas">Calificadas</a>
-                </li>
-                <li>
-                    <a class="dropdown-item" asp-controller="Noticia" asp-action="FiltrarNoticiasCriterio" asp-route-selectedCriterio="Vistas">Vistas</a>
-                </li>
+                @foreach (var filtro in filtros)
+                {
+                    <li>
+                        <a class="dropdown-item" asp-controller="Noticia" asp-action="FiltrarNoticiasCriterio" asp-route-selectedCriterio="@filtro">@filtro</a>
+                    </li>
+                }
             </ul>
         </div>
         <div class="dropdown">
@@ -44,55 +37,188 @@
             </ul>
         </div>
     </div>
+
+    @if(Model.Resultado == 0)
+    {
+        <div>
+            <p class="text-danger">Error al realizar acción en noticias <i class="bi bi-exclamation-octagon-fill"></i></p>
+        </div>        
+    }
     <div class="d-flex flex-wrap gap mb-5">
         @foreach (var noticia in Model.Noticias)
         {
-            <div class="card shadow-lg" style="width: 350px;">
+            <div class="card shadow-lg" style="width: 380px;">
                 <img src="/img/noticia.png" class="card-img-top" alt="...">
-                <div class="card-body">
+                <div class="d-flex flex-column card-body">
                     <div class="d-flex flex-row gap">
                         <p class="card-text">@noticia.Tema.Titulo</p>
                         <p class="card-text">@noticia.SubTema.Titulo</p>
                     </div>
-                    <h5 class="card-title">Nueva ley en el Congreso</h5>
-                    <h6 class="card-title">Se aprueba nueva ley en el Congreso</h6>
-                    <p class="card-text">El Congreso ha aprobado una nueva ley que...</p>
-                    <p class="card-text">18-03-2023</p>
-                    <div class="d-flex gap">
-                        <a href="#" class="btn btn-primary"><i class="bi bi-chat-dots"></i> Comentar</a>
-                        <a href="#" class="btn btn-primary"><i class="bi bi-star-half"></i> Calificar</a>
-                        <a href="#" class="btn btn-primary"><i class="bi bi-share"></i> Compartir</a>
+                    <h5 class="card-title">@noticia.Titulo</h5>
+                    <h6 class="card-title">@noticia.Sinopsis</h6>
+                    <p class="card-text">@noticia.Descripcion</p>
+                    <div class="d-flex gap-3">
+                        <p class="card-text">@noticia.FechaPost</p>
+                        <p class="card-text">Calificación Promedio: @noticia.CalificacionPromedio <i class="bi bi-star-fill"></i></p>
+                    </div>
+                    <div class="d-flex gap mt-auto">
+                        <button class="btn btn-primary"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#calificar-noticia"
+                                data-id="@noticia.IdNoticia"
+                                data-titulo="@noticia.Titulo">
+                            <i class="bi bi-star-half"></i> Calificar
+                        </button>
+                        <button class="btn btn-primary"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#comentar-noticia"
+                                data-id="@noticia.IdNoticia"
+                                data-titulo="@noticia.Titulo">
+                            <i class="bi bi-chat-dots"></i> Comentar
+                        </button>
+                        <button class="btn btn-primary"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#compartir-noticia"
+                                data-id="@noticia.IdNoticia"
+                                data-titulo="@noticia.Titulo">
+                            <i class="bi bi-share"></i> Compartir
+                        </button>
                     </div>
                 </div>
-            </div>         
+            </div>
         }
     </div>
-    <!-- Modal -->
-    <div class="modal fade shadow-lg" id="add-noticia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Modal Calificar -->
+    <div class="modal fade shadow-lg" id="calificar-noticia" tabindex="-1" aria-labelledby="calificarModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <h1 class="modal-title fs-5" id="calificarModalLabel"></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput">Email address</label>
+                <form asp-action="CalificarNoticia" asp-controller="Noticia" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="idNoticia" id="calificar-id-noticia" />
+                        <div class="form-group">
+                            <div class="d-flex align-items-center">
+                                <div class="me-2">
+                                    <label for="calificacion">Calificación:</label>
+                                </div>
+                                <div class="me-2">
+                                    <input type="number" class="form-control" name="calificacion" min="1" max="5" required />
+                                </div>
+                                <div class="form-group">
+                                    <i class="bi bi-star-half fs-4"></i>
+                                </div>
+                            </div>
+                        </div>                       
                     </div>
-                    <div class="form-floating">
-                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                        <label for="floatingPassword">Password</label>
-                    </div>                  
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar calificación</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Comentar -->
+    <div class="modal fade shadow-lg" id="comentar-noticia" tabindex="-1" aria-labelledby="comentarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="comentarModalLabel"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                <form asp-action="ComentarNoticia" asp-controller="Noticia" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="idNoticia" id="comentar-id-noticia" />
+                        <div class="form-group">
+                            <label for="comentario">Comentario:</label>
+                            <textarea class="form-control" name="comentario" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar comentario</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Compartir -->
+    <div class="modal fade shadow-lg" id="compartir-noticia" tabindex="-1" aria-labelledby="compartirModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="compartirModalLabel"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <form asp-action="CompartirNoticia" asp-controller="Noticia" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="idNoticia" id="compartir-id-noticia" />
+                        <div class="form-group">
+                            <label for="mensaje">Compartir con:</label>
+                            <div class="me-2">
+                                <input type="email" id="email" class="form-control" name="correoDestino" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Compartir noticia</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
+<!-- JavaScript para manejar el modal -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calificarModal = document.getElementById('calificar-noticia');
+        var comentarModal = document.getElementById('comentar-noticia');
+        var compartirModal = document.getElementById('compartir-noticia');
+
+        calificarModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var idNoticia = button.getAttribute('data-id');
+            var tituloNoticia = button.getAttribute('data-titulo');
+
+            var modalTitle = calificarModal.querySelector('.modal-title');
+            var inputIdNoticia = calificarModal.querySelector('#calificar-id-noticia');
+
+            modalTitle.textContent = 'Calificar: ' + tituloNoticia;
+            inputIdNoticia.value = idNoticia;
+        });
+
+        comentarModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var idNoticia = button.getAttribute('data-id');
+            var tituloNoticia = button.getAttribute('data-titulo');
+
+            var modalTitle = comentarModal.querySelector('.modal-title');
+            var inputIdNoticia = comentarModal.querySelector('#comentar-id-noticia');
+
+            modalTitle.textContent = 'Comentar: ' + tituloNoticia;
+            inputIdNoticia.value = idNoticia;
+        });
+
+        compartirModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var idNoticia = button.getAttribute('data-id');
+            var tituloNoticia = button.getAttribute('data-titulo');
+
+            var modalTitle = compartirModal.querySelector('.modal-title');
+            var inputIdNoticia = compartirModal.querySelector('#compartir-id-noticia');
+
+            modalTitle.textContent = 'Compartir: ' + tituloNoticia;
+            inputIdNoticia.value = idNoticia;
+        });
+    });
+</script>
 
 
 

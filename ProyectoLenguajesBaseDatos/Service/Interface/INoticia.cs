@@ -12,11 +12,11 @@ namespace ProyectoLenguajesBaseDatos.Service.Interface
 
         void AumentarVisitas(int id);
 
-        void ComentarNoticia(string comentario, int id);
+        int ComentarNoticia(int idNoticia, string comentario, string correo);
 
-        void CalificarNoticia(int calificaion, int id);
+        int CalificarNoticia(int idNoticia, int calificaion, string correo);
 
-        void CompartirNoticia(string correoDestino, int id);
+        int CompartirNoticia(int idNoticia, string correoEnvia, string correoDestino);
 
         List<Tema> GetTemas();
 
