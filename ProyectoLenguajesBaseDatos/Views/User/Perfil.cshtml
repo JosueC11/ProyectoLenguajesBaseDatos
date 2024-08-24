@@ -1,0 +1,114 @@
+﻿@model Usuario
+@{
+    ViewData["Title"] = "Perfil";
+}
+
+<div class="d-flex flex-column align-items-center mt-5 mb-4">   
+    <h1 class="mt-5 mb-5">Perfil</h1>
+    @if (Model is null)
+    {
+        <div>
+            <p class="text-danger">Error al realizar acción en perfil <i class="bi bi-exclamation-octagon-fill"></i></p>
+        </div>
+    }
+    <div class="card shadow-lg" style="width: 440px;">
+        <img src="/img/noticia.png" class="card-img-top" alt="...">
+        <div class="d-flex flex-column card-body">
+            <div class="d-flex flex-row gap mb-4">
+                <h5 class="card-text me-auto">Nombre: @Model.Nombre </h5>
+                <h5 class="card-text">Apellido: @Model.Apellido </h5>
+            </div>
+            <div class="d-flex flex-row gap mb-4">
+                <h5 class="card-text me-4">@Model.CorreoUsuario </h5>
+            </div>
+            <div class="d-flex justify-content-center gap mt-auto">
+                <button class="btn btn-primary"
+                        type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#actualizar-perfil"
+                        data-id=""
+                        data-titulo="">
+                        <i class="bi bi-pencil-fill"></i>
+                        <br /> Actualizar
+                </button>
+                <button class="btn btn-primary"
+                        type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#cambiar-password"
+                        data-id=""
+                        data-titulo="">
+                        <i class="bi bi-lock-fill"></i>
+                        <br /> Cambiar<br /> Contraseña
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Modal actualizar -->
+    <div class="modal fade shadow-lg" id="actualizar-perfil" tabindex="-1" aria-labelledby="actualizarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="actualizarModalLabel">Actualizar su Perfil</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form asp-action="ActualizarPerfil" asp-controller="User" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="d-flex flex-column align-items-center">
+                                <div class="me-2">
+                                    <label for="nombre">Nombre:</label>
+                                </div>
+                                <div class="me-2">
+                                    <input type="text" class="form-control" name="nombre" placeholder="@Model.Nombre" required />
+                                </div>
+                                <div class="me-2">
+                                    <label for="apellido">Apellido:</label>
+                                </div>
+                                <div class="me-2">
+                                    <input type="text" class="form-control" name="apellido" placeholder="@Model.Apellido" required />
+                                </div>
+                                <i class="bi bi-pencil-fill mt-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar calificación</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal cambiar password -->
+    <div class="modal fade shadow-lg" id="cambiar-password" tabindex="-1" aria-labelledby="cambiarContraseñaModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="cambiarPasswordModalLabel">Cambiar su contraseña Perfil</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form asp-action="CambiarPassword" asp-controller="User" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="d-flex flex-column align-items-center">
+                                <div class="me-2">
+                                    <label for="nombre">Contraseña Nueva:</label>
+                                </div>
+                                <div class="me-2">
+                                    <input type="text" class="form-control" name="password" placeholder="Nueva Contrseña" required />
+                                </div>
+                                <i class="bi bi-lock-fill mt-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Contrseña</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+

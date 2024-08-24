@@ -79,6 +79,16 @@ namespace ProyectoLenguajesBaseDatos.Controllers
             return View("Listado", viewModel);
         }
 
+        [HttpGet]
+        [Route("/Noticia/FiltrarNoticiasCriterioUsuario/{selectedCriterio}")]
+        public ActionResult FiltrarNoticiasCriterioUsuario(string selectedCriterio)
+        {
+            var correo = HttpContext.Session.GetString("email");
+            var noticiasFiltradasCriterioUsuario = _noticiaImplement.FiltrarNoticiasCriterioUsuario(selectedCriterio, correo);
+
+            return View("Historial", noticiasFiltradasCriterioUsuario);
+        }
+
         [HttpPost]
         public IActionResult CalificarNoticia(int idNoticia, int calificacion)
         {

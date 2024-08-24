@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using ProyectoLenguajesBaseDatos.Service.ServiceImplement;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProyectoLenguajesBaseDatos.Controllers
 {
@@ -45,6 +46,38 @@ namespace ProyectoLenguajesBaseDatos.Controllers
                 return RedirectToAction("GetLogin", "User");
             }
             return View("SingUp", resultado);
+        }
+
+        [HttpGet]
+        public IActionResult GetPerfil()
+        {
+            var correo = HttpContext.Session.GetString("email");
+            var resultado = _userImplement.GetPerfil(correo);
+            return View("Perfil", resultado);
+        }
+
+        [HttpPost]
+        public IActionResult ActualizarPerfil(string nombre, string apellido)
+        {
+            var correo = HttpContext.Session.GetString("email");
+            var resultado = _userImplement.ActualizarPerfil(nombre, apellido, correo);
+            if (resultado == 1) 
+            {
+                return RedirectToAction("GetPerfil","User");
+            }
+            return View("Perfil");
+        }
+
+        [HttpPost]
+        public IActionResult CambiarPassword(string password)
+        {
+            var correo = HttpContext.Session.GetString("email");
+            var resultado = _userImplement.CambiarPassword(password, correo);
+            if (resultado == 1)
+            {
+                return RedirectToAction("GetPerfil", "User");
+            }
+            return View("Perfil");
         }
     }
 }

@@ -453,5 +453,83 @@ namespace ProyectoLenguajesBaseDatos.Service.ServiceImplement
                 return null;
             }
         }
+
+        public List<Noticia> FiltrarNoticiasCriterioUsuario(string criterio, string correo)
+        {
+            var noticiasFiltradasUsuario = new List<Noticia>();
+
+            try
+            {
+                using (OracleConnection connection = _context.GetConnection())
+                {
+                    using (OracleCommand cmd = new OracleCommand("PKG_PORTAL.SP_GET_NOTICIAS_FILTRADAS_CRITERIO_USUARIO", connection))
+                    {
+                        var correoParam = new OracleParameter
+                        {
+                            ParameterName = "CORREO_USUARIO_IN",
+                            OracleDbType = OracleDbType.Varchar2,
+                            Direction = ParameterDirection.Input,
+                            Value = correo
+                        };
+                        cmd.Parameters.Add(correoParam);
+
+                        var CriterioParam = new OracleParameter
+                        {
+                            ParameterName = "CRITERIO_IN",
+                            OracleDbType = OracleDbType.Varchar2,
+                            Direction = ParameterDirection.Input,
+                            Value = criterio
+                        };
+                        cmd.Parameters.Add(CriterioParam);
+
+                        var listaNoticias = new OracleParameter
+                        {
+                            ParameterName = "LISTA_NOTICIAS",
+                            OracleDbType = OracleDbType.RefCursor,
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(listaNoticias);
+
+                        connection.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        OracleDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            var noticia = new Noticia
+                            {
+                                IdNoticia = Convert.ToInt32(reader["ID_NOTICIA"]),
+                                CorreoUsuarioCreador = reader["CORREO_USUARIO_CREADOR"].ToString(),
+                                Titulo = reader["TITULO"].ToString(),
+                                Sinopsis = reader["SINOPSIS"].ToString(),
+                                Descripcion = reader["DESCRIPCION"].ToString(),
+                                Visitas = Convert.ToInt32(reader["VISITAS"]),
+                                FechaPost = Convert.ToDateTime(reader["FECHA_POST"]),
+                                CalificacionPromedio = Convert.ToInt32(reader["CALIFICACION_PROMEDIO"]),
+                                Tema = new Tema
+                                {
+                                    IdTema = Convert.ToInt32(reader["ID_TEMA"]),
+                                    Titulo = reader["TITULO_TEMA"].ToString()
+                                },
+                                SubTema = new SubTema
+                                {
+                                    IdSubtema = Convert.ToInt32(reader["ID_SUBTEMA"]),
+                                    Titulo = reader["TITULO_SUBTEMA"].ToString()
+                                }
+                            };
+
+                            noticiasFiltradasUsuario.Add(noticia);
+                        }
+                    }
+                }
+                return noticiasFiltradasUsuario;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return null;
+            }
+        }
     }
 }
