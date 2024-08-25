@@ -1,6 +1,6 @@
-﻿
+﻿@model List<Noticia>
 @{
-    ViewData["Title"] = "Mis Noticias";
+    ViewData["Title"] = "Mis Noticias";   
 }
 
 <div>
@@ -11,25 +11,30 @@
         <i class="bi bi-plus-lg"></i> Nueva Noticia
     </button>
     <div class="d-flex flex-wrap gap mb-5">
-        @for (var i = 0; i < 5; i++)
+        @if(Model is not null)
         {
-            <div class="card shadow-lg" style="width: 380px;">
-                <img src="/img/noticia.png" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <div class="d-flex flex-row gap">
-                        <p class="card-text">Internacionales</p>
-                        <p class="card-text">América Latina</p>
-                    </div>
-                    <h5 class="card-title">Nueva ley en el Congreso</h5>
-                    <h6 class="card-title">Se aprueba nueva ley en el Congreso</h6>
-                    <p class="card-text">El Congreso ha aprobado una nueva ley que...</p>
-                    <p class="card-text">18-03-2023</p>
-                    <div class="d-flex gap">
-                        <a href="#" class="btn btn-warning"><i class="bi bi-pencil"></i> Editar</a>
-                        <a href="#" class="btn btn-danger"><i class="bi bi-trash-fill"></i> Eliminar</a>
+            @foreach (var noticia in Model)
+            {
+                <div class="card shadow-lg" style="width: 380px;">
+                    <img src="/img/noticia.png" class="card-img-top" alt="...">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex flex-row gap">
+                            <p class="card-text">@noticia.Tema.Titulo</p>
+                            <p class="card-text">@noticia.SubTema.Titulo</p>
+                        </div>
+                        <h5 class="card-title">@noticia.Titulo</h5>
+                        <h6 class="card-title">@noticia.Sinopsis</h6>
+                        <p class="card-text">@noticia.Descripcion</p>
+                        <p class="card-text">@noticia.FechaPost</p>
+                        <p class="card-text">@noticia.CalificacionPromedio</p>
+                        <div class="d-flex justify-content-center gap">
+                            <a href="#" class="btn btn-warning"><i class="bi bi-pencil"></i> Editar</a>
+                            <a href="#" class="btn btn-danger"><i class="bi bi-trash-fill"></i> Eliminar</a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
+            
         }
     </div>
     <!-- Modal -->
@@ -41,57 +46,130 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="d-flex flex-column gap bg-menu-color p-4 rounded shadow-lg">
+                    <form asp-controller="Noticia" asp-action="SetNoticia" method="post" id="formAgregarNoticia" class="d-flex flex-column gap bg-menu-color p-4 rounded shadow-lg">
                         <div class="d-flex justify-content-end">
                             <i class="bi bi-plus-circle"></i>
                         </div>
                         <div class="d-flex flex-row gap mb-1">
                             <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button id="btnTema" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-filter"></i> Tema
                                 </button>
-                                <ul class="dropdown-menu">
-                                    <li><button class="dropdown-item" type="button">1</button></li>
-                                    <li><button class="dropdown-item" type="button">2</button></li>
-                                    <li><button class="dropdown-item" type="button">3</button></li>
+                                <ul id="dropdownTemas" class="dropdown-menu">
+                                    <li><button class="dropdown-item" type="button" data-id="1">Internacionales</button></li>
+                                    <li><button class="dropdown-item" type="button" data-id="2">Nacionales</button></li>
+                                    <li><button class="dropdown-item" type="button" data-id="3">Tecnología</button></li>
+                                    <li><button class="dropdown-item" type="button" data-id="4">Deportes</button></li>
                                 </ul>
                             </div>
                             <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button id="btnSubTema" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-filter"></i> SubTema
                                 </button>
-                                <ul class="dropdown-menu">
-                                    <li><button class="dropdown-item" type="button">1</button></li>
-                                    <li><button class="dropdown-item" type="button">2</button></li>
-                                    <li><button class="dropdown-item" type="button">3</button></li>
+                                <ul id="dropdownSubtemas" class="dropdown-menu">
+                                    <!-- Los subtemas se llenarán dinámicamente aquí -->
                                 </ul>
                             </div>
                         </div>
                         <div class="d-flex justify-content-around flex-row gap">
                             <div class="d-flex justify-content-around flex-column">
                                 <label for="inputTitulo" class="form-label">Titulo</label>
-                                <input type="text" class="form-control" id="inputTitulo" placeholder="Titulo Noticia">
+                                <input type="text" class="form-control" id="inputTitulo" name="titulo" placeholder="Titulo Noticia" required>
                             </div>
                             <div class="d-flex justify-content-around flex-column">
                                 <label for="inputSinopsis" class="form-label">Sinopsis</label>
-                                <input type="text" class="form-control" id="inputSinopsis" placeholder="Sinopsis Noticia">
+                                <input type="text" class="form-control" id="inputSinopsis" name="sinopsis" placeholder="Sinopsis Noticia" required>
                             </div>
                         </div>
                         <div class="flex-row">
                             <label for="inputDescripcion" class="form-label">Descripción</label>
-                            <input type="text" class="form-control" id="inputDescripcion" placeholder="Descripción Noticia">
+                            <input type="text" class="form-control" id="inputDescripcion" name="descripcion" placeholder="Descripción Noticia" required>
                         </div>
-                        <div class="flex-row">
-                            <label for="inputFecha" class="form-label">Fecha</label>
-                            <input type="date" class="form-control" id="inputFecha" placeholder="Fecha">
+                        <!-- Campos ocultos para los IDs -->
+                        <input type="hidden" id="inputTemaId" name="idTema" />
+                        <input type="hidden" id="inputSubTemaId" name="idSubtema" />
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+                            <button type="submit" class="btn btn-success">Agregar</button>
                         </div>
                     </form>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
-                    <button type="button" class="btn btn-success">Agregar</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var temasYSubtemas = {
+            1: [
+                { id: 1, nombre: "América Latina" },
+                { id: 2, nombre: "Europa" }
+            ],
+            2: [
+                { id: 3, nombre: "Política" },
+                { id: 4, nombre: "Economía" }
+            ],
+            3: [
+                { id: 5, nombre: "Innovaciones" },
+                { id: 6, nombre: "Ciberseguridad" }
+            ],
+            4: [
+                { id: 7, nombre: "Fútbol" },
+                { id: 8, nombre: "Básquetbol" }
+            ]
+        };
+
+        var defaultTemaId = 1; // ID del tema por defecto
+        var defaultSubTemaId = 1; // ID del subtema por defecto
+
+        function setTema(temaId) {
+            var temaNombre = $('#dropdownTemas').find(`button[data-id=${temaId}]`).text();
+            $('#btnTema').text(`Tema: ${temaNombre}`);
+            $('#inputTemaId').val(temaId);
+
+            var subtemas = temasYSubtemas[temaId];
+            $('#dropdownSubtemas').empty();
+            $.each(subtemas, function (index, subtema) {
+                $('#dropdownSubtemas').append(
+                    $('<li>').append(
+                        $('<button>')
+                            .addClass('dropdown-item')
+                            .attr('type', 'button')
+                            .text(subtema.nombre)
+                            .data('id', subtema.id)
+                            .click(function () {
+                                var subtemaId = $(this).data('id');
+                                var subtemaNombre = $(this).text();
+                                $('#btnSubTema').text(`SubTema: ${subtemaNombre}`);
+                                $('#inputSubTemaId').val(subtemaId);
+                            })
+                    )
+                );
+            });
+
+            // Limpiar la selección del subtema cuando se cambia el tema
+            $('#btnSubTema').text('SubTema');
+            $('#inputSubTemaId').val('');
+        }
+
+        // Inicializar con el tema por defecto
+        setTema(defaultTemaId);
+
+        $('#dropdownTemas .dropdown-item').click(function () {
+            var temaId = $(this).data('id');
+            setTema(temaId);
+        });
+
+        $('#formAgregarNoticia').submit(function (event) {
+            var temaId = $('#inputTemaId').val();
+            var subtemaId = $('#inputSubTemaId').val();
+
+            if (!temaId || !subtemaId) {
+                event.preventDefault();
+                alert("Por favor, seleccione un tema y un subtema.");
+            }
+        });
+    });
+</script>

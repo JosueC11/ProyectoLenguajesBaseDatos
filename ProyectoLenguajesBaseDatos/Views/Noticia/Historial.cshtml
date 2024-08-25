@@ -36,7 +36,9 @@
                             <p class="card-text">Calificación Promedio: @noticia.CalificacionPromedio <i class="bi bi-star-fill"></i></p>
                         </div>
                         <div class="d-flex justify-content-center gap mt-auto">
-                            <a href="#" class="btn btn-warning"><i class="bi bi-eye-fill"></i> Ver Noticia</a>
+                            <a class="btn btn-primary" asp-controller="Noticia" asp-action="VerNoticia" asp-route-idNoticia="@noticia.IdNoticia">
+                                <i class="bi bi-eye-fill"></i> Ver
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -38,9 +38,24 @@ namespace ProyectoLenguajesBaseDatos.Controllers
         }
 
         [HttpGet]
+        [Route("/Noticia/VerNoticia/{idNoticia}\"")]
+        public ActionResult VerNoticia(int idNoticia)
+        {
+            var aumentarNoticia = _noticiaImplement.AumentarVisitas(idNoticia);
+            if (aumentarNoticia == 1) 
+            {
+                var noticia = _noticiaImplement.VerNoticia(idNoticia);
+                return View(noticia);
+            }
+            return RedirectToAction("Listado");
+        }
+
+        [HttpGet]
         public ActionResult MisNoticias()
         {
-            return View();
+            var correo = HttpContext.Session.GetString("email");
+            var resultado = _noticiaImplement.GetNoticiasUsuario(correo);
+            return View(resultado);
         }
 
         [HttpGet]
@@ -49,9 +64,31 @@ namespace ProyectoLenguajesBaseDatos.Controllers
             return View();
         }
 
+        [HttpPost]
+        public ActionResult SetNoticia(int idTema, int idSubtema, string titulo, string sinopsis, string descripcion)
+        {
+            var correo = HttpContext.Session.GetString("email");
+            var resultado = _noticiaImplement.SetNoticias(idTema, idSubtema, correo, titulo, sinopsis, descripcion);
+            return View("MisNoticias");
+        }
+
+        [HttpPost]
+        public ActionResult FiltrarPalabra(string filtro)
+        {
+            var resultado = _noticiaImplement.FiltrarPalabra(filtro);
+            var temas = _noticiaImplement.GetTemas();
+
+            var viewModel = new ModelNoticiasTemas
+            {
+                Noticias = resultado,
+                Temas = temas
+            };
+            return View("Listado", viewModel);
+        }
+
         [HttpGet]
         [Route("/Noticia/FiltrarNoticiasTema/{selectedTema}")]
-        public ActionResult FiltrarNoticiasTema([FromRoute] string selectedTema)
+        public ActionResult FiltrarNoticiasTema(string selectedTema)
         {
             var noticiasFiltradasTema = _noticiaImplement.FiltrarNoticiasTema(selectedTema);
             var temas = _noticiaImplement.GetTemas();

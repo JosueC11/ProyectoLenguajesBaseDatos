@@ -1,4 +1,6 @@
-﻿namespace ProyectoLenguajesBaseDatos.Models
+﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace ProyectoLenguajesBaseDatos.Models
 {
     public class SubTema
     {

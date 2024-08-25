@@ -37,6 +37,26 @@
             </ul>
         </div>
     </div>
+    <div>
+        <form asp-controller="Noticia" asp-action="FiltrarPalabra" method="post">
+            <div class="d-flex flex-row gap mb-5">
+                <div class="d-flex align-items-center">
+                    <div class="me-2">
+                        <label for="calificacion">Filtrar Titulo:</label>
+                    </div>
+                    <div class="me-2">
+                        <input type="text" class="form-control" name="filtro" required />
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                </div>
+                <div>
+                    <a class="btn btn-secondary" asp-controller="Noticia" asp-action="Listado">Quitar filtro</a>
+                </div>
+            </div>
+        </form>
+    </div>
 
     @if(Model.Resultado == 0)
     {
@@ -47,7 +67,7 @@
     <div class="d-flex flex-wrap gap mb-5">
         @foreach (var noticia in Model.Noticias)
         {
-            <div class="card shadow-lg" style="width: 380px;">
+            <div class="card shadow-lg" style="width: 415px;">
                 <img src="/img/noticia.png" class="card-img-top" alt="...">
                 <div class="d-flex flex-column card-body">
                     <div class="d-flex flex-row gap">
@@ -86,6 +106,9 @@
                                 data-titulo="@noticia.Titulo">
                             <i class="bi bi-share"></i> Compartir
                         </button>
+                        <a class="btn btn-primary" asp-controller="Noticia" asp-action="VerNoticia" asp-route-idNoticia="@noticia.IdNoticia">
+                            <i class="bi bi-eye-fill"></i> Ver
+                        </a>
                     </div>
                 </div>
             </div>

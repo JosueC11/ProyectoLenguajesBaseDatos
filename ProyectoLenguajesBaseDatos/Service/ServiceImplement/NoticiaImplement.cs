@@ -121,13 +121,135 @@ namespace ProyectoLenguajesBaseDatos.Service.ServiceImplement
 
         }
 
-        public void SetNoticias(Noticia noticias)
+        public int SetNoticias(int idTema, int idSubtema, string correo, string titulo, string sinopsis, string descripcion)
         {
+            var resultado = 0;
+            try
+            {
+                using (OracleConnection connection = _context.GetConnection())
+                {
+                    using (OracleCommand cmd = new OracleCommand("PKG_PORTAL.SP_INSERTAR_NOTICIA", connection))
+                    {
+                        var idTemaParam = new OracleParameter
+                        {
+                            ParameterName = "ID_TEMA_IN",
+                            OracleDbType = OracleDbType.Int32,
+                            Direction = ParameterDirection.Input,
+                            Value = idTema
+                        };
+                        cmd.Parameters.Add(idTemaParam);
+
+                        var idSubtemaParam = new OracleParameter
+                        {
+                            ParameterName = "ID_SUBTEMA_IN",
+                            OracleDbType = OracleDbType.Int32,
+                            Direction = ParameterDirection.Input,
+                            Value = idSubtema
+                        };
+                        cmd.Parameters.Add(idSubtemaParam);
+
+                        var correoParam = new OracleParameter
+                        {
+                            ParameterName = "CORREO_USUARIO_CREADOR_IN",
+                            OracleDbType = OracleDbType.Varchar2,
+                            Direction = ParameterDirection.Input,
+                            Value = correo
+                        };
+                        cmd.Parameters.Add(correoParam);
+
+                        var tituloParam = new OracleParameter
+                        {
+                            ParameterName = "TITULO_IN",
+                            OracleDbType = OracleDbType.Varchar2,
+                            Direction = ParameterDirection.Input,
+                            Value = titulo
+                        };
+                        cmd.Parameters.Add(tituloParam);
+
+                        var sinopsisParam = new OracleParameter
+                        {
+                            ParameterName = "SINOPSIS_IN",
+                            OracleDbType = OracleDbType.Varchar2,
+                            Direction = ParameterDirection.Input,
+                            Value = sinopsis
+                        };
+                        cmd.Parameters.Add(sinopsisParam);
+
+                        var descipcionParam = new OracleParameter
+                        {
+                            ParameterName = "DESCRIPCION_IN",
+                            OracleDbType = OracleDbType.Varchar2,
+                            Direction = ParameterDirection.Input,
+                            Value = descripcion
+                        };
+                        cmd.Parameters.Add(descipcionParam);
+
+                        var resultadoParam = new OracleParameter
+                        {
+                            ParameterName = "RESULTADO",
+                            OracleDbType = OracleDbType.Int32,
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(resultadoParam);
+
+                        connection.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.ExecuteNonQuery();
+
+                        resultado = ((Oracle.ManagedDataAccess.Types.OracleDecimal)resultadoParam.Value).ToInt32();
+                    }
+                }
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return 0;
+            }
         }
 
-        public void AumentarVisitas(int id)
+        public int AumentarVisitas(int idNoticia)
         {
-            throw new NotImplementedException();
+            var resultado = 0;
+            try
+            {
+                using (OracleConnection connection = _context.GetConnection())
+                {
+                    using (OracleCommand cmd = new OracleCommand("SP_AUMENTAR_VISITA_NOTICIA", connection))
+                    {
+                        var idParam = new OracleParameter
+                        {
+                            ParameterName = "ID_NOTICIA_IN",
+                            OracleDbType = OracleDbType.Int32,
+                            Direction = ParameterDirection.Input,
+                            Value = idNoticia
+                        };
+                        cmd.Parameters.Add(idParam);
+
+                        var resultadoParam = new OracleParameter
+                        {
+                            ParameterName = "RESULTADO",
+                            OracleDbType = OracleDbType.Int32,
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(resultadoParam);
+
+                        connection.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.ExecuteNonQuery();
+
+                        resultado = ((Oracle.ManagedDataAccess.Types.OracleDecimal)resultadoParam.Value).ToInt32();
+                    }
+                }
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return 0;
+            }
         }
 
         public int CalificarNoticia(int idNoticia, int calificaion, string correo)
@@ -524,6 +646,265 @@ namespace ProyectoLenguajesBaseDatos.Service.ServiceImplement
                     }
                 }
                 return noticiasFiltradasUsuario;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return null;
+            }
+        }
+
+        public Noticia VerNoticia(int idNoticia)
+        {
+            var noticiaReady = new Noticia();
+            try
+            {
+                using (OracleConnection connection = _context.GetConnection())
+                {
+                    using (OracleCommand cmd = new OracleCommand("PKG_PORTAL.SP_VER_NOTICIA", connection))
+                    {
+                        var idParam = new OracleParameter
+                        {
+                            ParameterName = "ID_NOTICIA_IN",
+                            OracleDbType = OracleDbType.Int32,
+                            Direction = ParameterDirection.Input,
+                            Value = idNoticia
+                        };
+                        cmd.Parameters.Add(idParam);
+
+                        var noticiaParam = new OracleParameter
+                        {
+                            ParameterName = "NOTICIA",
+                            OracleDbType = OracleDbType.RefCursor,
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(noticiaParam);
+
+                        connection.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        OracleDataReader reader = cmd.ExecuteReader();
+
+                        if (reader.Read())
+                        {
+                            noticiaReady.IdNoticia = Convert.ToInt32(reader["ID_NOTICIA"]);
+                            noticiaReady.CorreoUsuarioCreador = reader["CORREO_USUARIO_CREADOR"].ToString();
+                            noticiaReady.Titulo = reader["TITULO"].ToString();
+                            noticiaReady.Sinopsis = reader["SINOPSIS"].ToString();
+                            noticiaReady.Descripcion = reader["DESCRIPCION"].ToString();
+                            noticiaReady.Visitas = Convert.ToInt32(reader["VISITAS"]);
+                            noticiaReady.FechaPost = Convert.ToDateTime(reader["FECHA_POST"]);
+                            noticiaReady.CalificacionPromedio = Convert.ToInt32(reader["CALIFICACION_PROMEDIO"]);
+                            noticiaReady.Tema = new Tema
+                            {
+                                IdTema = Convert.ToInt32(reader["ID_TEMA"]),
+                                Titulo = reader["TITULO_TEMA"].ToString()
+                            };
+                            noticiaReady.SubTema = new SubTema
+                            {
+                                IdSubtema = Convert.ToInt32(reader["ID_SUBTEMA"]),
+                                Titulo = reader["TITULO_SUBTEMA"].ToString()
+                            };
+                        }
+                    }
+                }
+                return noticiaReady;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return null;
+            }
+        }
+
+        public List<Noticia> GetNoticiasRecientes()
+        {
+            var noticias = new List<Noticia>();
+
+            try
+            {
+                using (OracleConnection connection = _context.GetConnection())
+                {
+                    using (OracleCommand cmd = new OracleCommand("SP_GET_NOTICIAS_RECIENTES", connection))
+                    {
+                        var listaNoticias = new OracleParameter
+                        {
+                            ParameterName = "LISTA_NOTICIAS",
+                            OracleDbType = OracleDbType.RefCursor,
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(listaNoticias);
+
+                        connection.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        OracleDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            var noticia = new Noticia
+                            {
+                                IdNoticia = Convert.ToInt32(reader["ID_NOTICIA"]),
+                                CorreoUsuarioCreador = reader["CORREO_USUARIO_CREADOR"].ToString(),
+                                Titulo = reader["TITULO"].ToString(),
+                                Sinopsis = reader["SINOPSIS"].ToString(),
+                                Descripcion = reader["DESCRIPCION"].ToString(),
+                                Visitas = Convert.ToInt32(reader["VISITAS"]),
+                                FechaPost = Convert.ToDateTime(reader["FECHA_POST"]),
+                                CalificacionPromedio = Convert.ToInt32(reader["CALIFICACION_PROMEDIO"]),
+                                Tema = new Tema
+                                {
+                                    IdTema = Convert.ToInt32(reader["ID_TEMA"]),
+                                    Titulo = reader["TITULO_TEMA"].ToString()
+                                },
+                                SubTema = new SubTema
+                                {
+                                    IdSubtema = Convert.ToInt32(reader["ID_SUBTEMA"]),
+                                    Titulo = reader["TITULO_SUBTEMA"].ToString()
+                                }
+                            };
+
+                            noticias.Add(noticia);
+                        }
+                    }
+                }
+                return noticias;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return null;
+            }
+        }
+
+        public List<Noticia> GetNoticiasUsuario(string correo)
+        {
+            var noticias = new List<Noticia>();
+            try
+            {
+                using (OracleConnection connection = _context.GetConnection())
+                {
+                    using (OracleCommand cmd = new OracleCommand("PKG_PORTAL.SP_GET_NOTICIAS_USUARIO", connection))
+                    {
+                        var correoParam = new OracleParameter
+                        {
+                            ParameterName = "CORREO_USUARIO_IN",
+                            OracleDbType = OracleDbType.Varchar2,
+                            Direction = ParameterDirection.Input,
+                            Value = correo
+                        };
+                        cmd.Parameters.Add(correoParam);
+
+                        var listaNoticias = new OracleParameter
+                        {
+                            ParameterName = "LISTA_NOTICIAS",
+                            OracleDbType = OracleDbType.RefCursor,
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(listaNoticias);
+
+                        connection.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        OracleDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            var noticia = new Noticia
+                            {
+                                IdNoticia = Convert.ToInt32(reader["ID_NOTICIA"]),
+                                CorreoUsuarioCreador = reader["CORREO_USUARIO_CREADOR"].ToString(),
+                                Titulo = reader["TITULO"].ToString(),
+                                Sinopsis = reader["SINOPSIS"].ToString(),
+                                Descripcion = reader["DESCRIPCION"].ToString(),
+                                Visitas = Convert.ToInt32(reader["VISITAS"]),
+                                FechaPost = Convert.ToDateTime(reader["FECHA_POST"]),
+                                CalificacionPromedio = Convert.ToInt32(reader["CALIFICACION_PROMEDIO"]),
+                                Tema = new Tema
+                                {
+                                    IdTema = Convert.ToInt32(reader["ID_TEMA"]),
+                                    Titulo = reader["TITULO_TEMA"].ToString()
+                                },
+                                SubTema = new SubTema
+                                {
+                                    IdSubtema = Convert.ToInt32(reader["ID_SUBTEMA"]),
+                                    Titulo = reader["TITULO_SUBTEMA"].ToString()
+                                }
+                            };
+
+                            noticias.Add(noticia);
+                        }
+                    }
+                }
+                return noticias;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return null;
+            }
+        }
+
+        public List<Noticia> FiltrarPalabra(string filtro)
+        {
+            var noticias = new List<Noticia>();
+            try
+            {
+                using (OracleConnection connection = _context.GetConnection())
+                {
+                    using (OracleCommand cmd = new OracleCommand("PKG_PORTAL.SP_FILTRAR_PALABRA", connection))
+                    {
+                        var filtroParam = new OracleParameter
+                        {
+                            ParameterName = "FILTRO_IN",
+                            OracleDbType = OracleDbType.Varchar2,
+                            Direction = ParameterDirection.Input,
+                            Value = filtro
+                        };
+                        cmd.Parameters.Add(filtroParam);
+
+                        var listaNoticias = new OracleParameter
+                        {
+                            ParameterName = "LISTA_NOTICIAS",
+                            OracleDbType = OracleDbType.RefCursor,
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(listaNoticias);
+
+                        connection.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        OracleDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            var noticia = new Noticia
+                            {
+                                IdNoticia = Convert.ToInt32(reader["ID_NOTICIA"]),
+                                CorreoUsuarioCreador = reader["CORREO_USUARIO_CREADOR"].ToString(),
+                                Titulo = reader["TITULO"].ToString(),
+                                Sinopsis = reader["SINOPSIS"].ToString(),
+                                Descripcion = reader["DESCRIPCION"].ToString(),
+                                Visitas = Convert.ToInt32(reader["VISITAS"]),
+                                FechaPost = Convert.ToDateTime(reader["FECHA_POST"]),
+                                CalificacionPromedio = Convert.ToInt32(reader["CALIFICACION_PROMEDIO"]),
+                                Tema = new Tema
+                                {
+                                    IdTema = Convert.ToInt32(reader["ID_TEMA"]),
+                                    Titulo = reader["TITULO_TEMA"].ToString()
+                                },
+                                SubTema = new SubTema
+                                {
+                                    IdSubtema = Convert.ToInt32(reader["ID_SUBTEMA"]),
+                                    Titulo = reader["TITULO_SUBTEMA"].ToString()
+                                }
+                            };
+
+                            noticias.Add(noticia);
+                        }
+                    }
+                }
+                return noticias;
             }
             catch (Exception ex)
             {
