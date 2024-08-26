@@ -963,6 +963,49 @@ namespace ProyectoLenguajesBaseDatos.Service.ServiceImplement
                 Console.WriteLine(ex.ToString());
                 return null;
             }
-        }       
+        }
+
+        public int EliminarNoticia(string idNoticia)
+        {
+            var resultado = 0;
+            try
+            {
+                using (OracleConnection connection = _context.GetConnection())
+                {
+                    using (OracleCommand cmd = new OracleCommand("PKG_PORTAL.SP_ELIMINAR_NOTICIA", connection))
+                    {
+                        var idNoticiaParam = new OracleParameter
+                        {
+                            ParameterName = "ID_NOTICIA_IN",
+                            OracleDbType = OracleDbType.Varchar2,
+                            Direction = ParameterDirection.Input,
+                            Value = idNoticia
+                        };
+                        cmd.Parameters.Add(idNoticiaParam);
+
+                        var resultadoParam = new OracleParameter
+                        {
+                            ParameterName = "RESULTADO",
+                            OracleDbType = OracleDbType.Int32,
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(resultadoParam);
+
+                        connection.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.ExecuteNonQuery();
+
+                        resultado = ((Oracle.ManagedDataAccess.Types.OracleDecimal)resultadoParam.Value).ToInt32();
+                    }
+                }
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return 0;
+            }
+        }
     }
 }

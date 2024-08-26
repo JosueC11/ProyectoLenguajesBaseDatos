@@ -18,6 +18,7 @@ namespace ProyectoLenguajesBaseDatos.Service.Interface
         int CompartirNoticia(int idNoticia, string correoEnvia, string correoDestino);
         List<Tema> GetTemas();
         List<Noticia> FiltrarNoticiasCriterio(string criterio);
-        List<Noticia> FiltrarNoticiasCriterioUsuario(string criterio, string correo);    
+        List<Noticia> FiltrarNoticiasCriterioUsuario(string criterio, string correo);
+        int EliminarNoticia(string idNoticia);
     }
 }

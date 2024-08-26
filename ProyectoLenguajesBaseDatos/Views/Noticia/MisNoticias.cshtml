@@ -15,7 +15,7 @@
         {
             @foreach (var noticia in Model)
             {
-                <div class="card shadow-lg" style="width: 380px;">
+                <div class="card d-flex flex-column shadow-lg" style="width: 380px;">
                     <img src="/img/noticia.png" class="card-img-top" alt="...">
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex flex-row gap">
@@ -26,10 +26,11 @@
                         <h6 class="card-title">@noticia.Sinopsis</h6>
                         <p class="card-text">@noticia.Descripcion</p>
                         <p class="card-text">@noticia.FechaPost</p>
-                        <p class="card-text">@noticia.CalificacionPromedio</p>
-                        <div class="d-flex justify-content-center gap">
-                            <a href="#" class="btn btn-warning"><i class="bi bi-pencil"></i> Editar</a>
-                            <a href="#" class="btn btn-danger"><i class="bi bi-trash-fill"></i> Eliminar</a>
+                        <p class="card-text">Calificación Promedio: @noticia.CalificacionPromedio <i class="bi bi-star-fill"></i></p>
+                        <div class="d-flex mt-auto justify-content-center gap">
+                            <a class="btn btn-danger" asp-controller="Noticia" asp-action="EliminarNoticia" asp-route-idNoticia="@noticia.IdNoticia">
+                                <i class="bi bi-trash-fill"></i> Eliminar
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -79,7 +79,7 @@ namespace ProyectoLenguajesBaseDatos.Controllers
         {
             var correo = HttpContext.Session.GetString("email");
             var resultado = _noticiaImplement.SetNoticias(idTema, idSubtema, correo, titulo, sinopsis, descripcion);
-            return View("MisNoticias");
+            return RedirectToAction("MisNoticias","Noticia");
         }
 
         [HttpPost]
@@ -174,6 +174,15 @@ namespace ProyectoLenguajesBaseDatos.Controllers
             var resultado = _noticiaImplement.CompartirNoticia(idNoticia, correoEnvia , correoDestino);
             TempData["Resultado"] = resultado;
             return RedirectToAction("Listado", "Noticia");
-        }     
+        }
+
+        [HttpGet]
+        [Route("/Noticia/EliminarNoticia/{idNoticia}")]
+        public ActionResult EliminarNoticia(string idNoticia)
+        {
+            var resultado = _noticiaImplement.EliminarNoticia(idNoticia);
+
+            return RedirectToAction("MisNoticias", "Noticia");
+        }
     }
 }
