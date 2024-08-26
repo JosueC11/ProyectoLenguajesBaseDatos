@@ -45,7 +45,13 @@ namespace ProyectoLenguajesBaseDatos.Controllers
             if (aumentarNoticia == 1) 
             {
                 var noticia = _noticiaImplement.VerNoticia(idNoticia);
-                return View(noticia);
+                var comentarios = _noticiaImplement.GetComentarios(idNoticia);
+                var viewModel = new ModelNoticiaComentario
+                {
+                    Noticia = noticia,
+                    Comentarios = comentarios,
+                };
+                return View(viewModel);
             }
             return RedirectToAction("Listado");
         }
@@ -54,6 +60,10 @@ namespace ProyectoLenguajesBaseDatos.Controllers
         public ActionResult MisNoticias()
         {
             var correo = HttpContext.Session.GetString("email");
+            if (correo is null) 
+            {
+                return RedirectToAction("GetLogin","User");
+            }
             var resultado = _noticiaImplement.GetNoticiasUsuario(correo);
             return View(resultado);
         }
@@ -130,6 +140,10 @@ namespace ProyectoLenguajesBaseDatos.Controllers
         public IActionResult CalificarNoticia(int idNoticia, int calificacion)
         {
             var correo = HttpContext.Session.GetString("email");
+            if (correo is null)
+            {
+                return RedirectToAction("GetLogin", "User");
+            }
             var resultado = _noticiaImplement.CalificarNoticia(idNoticia, calificacion, correo);
             TempData["Resultado"] = resultado;
             return RedirectToAction("Listado","Noticia");
@@ -139,6 +153,10 @@ namespace ProyectoLenguajesBaseDatos.Controllers
         public IActionResult ComentarNoticia(int idNoticia, string comentario)
         {
             var correo = HttpContext.Session.GetString("email");
+            if (correo is null)
+            {
+                return RedirectToAction("GetLogin", "User");
+            }
             var resultado = _noticiaImplement.ComentarNoticia(idNoticia, comentario, correo);
             TempData["Resultado"] = resultado;
             return RedirectToAction("Listado", "Noticia");
@@ -147,10 +165,15 @@ namespace ProyectoLenguajesBaseDatos.Controllers
         [HttpPost]
         public IActionResult CompartirNoticia(int idNoticia, string correoDestino)
         {
+            var correo = HttpContext.Session.GetString("email");
+            if (correo is null)
+            {
+                return RedirectToAction("GetLogin", "User");
+            }
             var correoEnvia = HttpContext.Session.GetString("email");
             var resultado = _noticiaImplement.CompartirNoticia(idNoticia, correoEnvia , correoDestino);
             TempData["Resultado"] = resultado;
             return RedirectToAction("Listado", "Noticia");
-        }
+        }     
     }
 }

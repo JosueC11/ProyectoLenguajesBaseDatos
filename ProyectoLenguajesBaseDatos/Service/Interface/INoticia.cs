@@ -6,7 +6,8 @@ namespace ProyectoLenguajesBaseDatos.Service.Interface
     {
         List<Noticia> GetNoticias();
         List<Noticia> GetNoticiasUsuario(string correo);
-        List<Noticia> GetNoticiasRecientes();
+        List<Noticia> GetNoticiasRecientes();     
+        List<Comentario> GetComentarios(int idNoticia);
         Noticia VerNoticia(int idNoticia);
         int SetNoticias(int idTema, int idSubtema,string correo, string titulo, string sinopsis, string descripcion);
         List<Noticia> FiltrarNoticiasTema(string filtro);
@@ -17,6 +18,6 @@ namespace ProyectoLenguajesBaseDatos.Service.Interface
         int CompartirNoticia(int idNoticia, string correoEnvia, string correoDestino);
         List<Tema> GetTemas();
         List<Noticia> FiltrarNoticiasCriterio(string criterio);
-        List<Noticia> FiltrarNoticiasCriterioUsuario(string criterio, string correo);
+        List<Noticia> FiltrarNoticiasCriterioUsuario(string criterio, string correo);    
     }
 }

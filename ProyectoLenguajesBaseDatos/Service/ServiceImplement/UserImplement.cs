@@ -165,6 +165,8 @@ namespace ProyectoLenguajesBaseDatos.Service.ServiceImplement
                             usuarioReady.Nombre = reader["NOMBRE"].ToString();
                             usuarioReady.Apellido = reader["APELLIDO"].ToString();
                             usuarioReady.Password = reader["PASSWORD"].ToString();
+                            usuarioReady.PreferenciaCreador = reader["PREFERENCIA_CREADOR"].ToString();
+                            usuarioReady.PreferenciaTema = reader["PREFERENCIA_TEMA"].ToString();
                             usuarioReady.Activo = Convert.ToInt32(reader["ACTIVO"]);
                         }
                     }
@@ -306,6 +308,105 @@ namespace ProyectoLenguajesBaseDatos.Service.ServiceImplement
             {
                 Console.WriteLine(ex.ToString());
                 return 0;
+            }
+        }
+
+        public int ActualizarPreferencias(string preferenciaCreador, string preferenciaTema, string correo)
+        {
+            var resultado = 0;
+            try
+            {
+                using (OracleConnection connection = _context.GetConnection())
+                {
+                    using (OracleCommand cmd = new OracleCommand("PKG_PORTAL.SP_ACTUALIZAR_PREFERENCIAS_USUARIO", connection))
+                    {
+                        var correoParam = new OracleParameter
+                        {
+                            ParameterName = "CORREO_USUARIO_IN",
+                            OracleDbType = OracleDbType.Varchar2,
+                            Direction = ParameterDirection.Input,
+                            Value = correo
+                        };
+                        cmd.Parameters.Add(correoParam);
+
+                        var creadorParam = new OracleParameter
+                        {
+                            ParameterName = "PREFERENCIA_CREADOR_IN",
+                            OracleDbType = OracleDbType.Varchar2,
+                            Direction = ParameterDirection.Input,
+                            Value = preferenciaCreador
+                        };
+                        cmd.Parameters.Add(creadorParam);
+
+                        var temaParam = new OracleParameter
+                        {
+                            ParameterName = "PREFERENCIA_TEMA_IN",
+                            OracleDbType = OracleDbType.Varchar2,
+                            Direction = ParameterDirection.Input,
+                            Value = preferenciaTema
+                        };
+                        cmd.Parameters.Add(temaParam);
+
+                        var resultadoParam = new OracleParameter
+                        {
+                            ParameterName = "RESULTADO",
+                            OracleDbType = OracleDbType.Int32,
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(resultadoParam);
+
+                        connection.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.ExecuteNonQuery();
+
+                        resultado = ((Oracle.ManagedDataAccess.Types.OracleDecimal)resultadoParam.Value).ToInt32();
+                    }
+                }
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return resultado;
+            }
+        }
+
+        public List<string> GetCorreosUsuarios()
+        {
+            var correos = new List<string>();
+            try
+            {
+                using (OracleConnection connection = _context.GetConnection())
+                {
+                    using (OracleCommand cmd = new OracleCommand("PKG_PORTAL.SP_GET_CORREOS_USUARIOS", connection))
+                    {
+                        var listaCorreos = new OracleParameter
+                        {
+                            ParameterName = "LISTA_CORREOS",
+                            OracleDbType = OracleDbType.RefCursor,
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(listaCorreos);
+
+                        connection.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        OracleDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            var correo = reader["CORREO_USUARIO"].ToString();
+                            correos.Add(correo);
+                        }
+                    }
+                }
+                return correos;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return null;
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using ProyectoLenguajesBaseDatos.Models;
 using ProyectoLenguajesBaseDatos.Service.ServiceImplement;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -8,9 +9,11 @@ namespace ProyectoLenguajesBaseDatos.Controllers
     public class UserController : Controller
     {
         private readonly UserImplement _userImplement;
-        public UserController(UserImplement userImplement) 
+        private readonly NoticiaImplement _noticiasImplement;
+        public UserController(UserImplement userImplement, NoticiaImplement noticiaImplement) 
         { 
             _userImplement = userImplement;
+            _noticiasImplement = noticiaImplement;
         }
 
         [HttpGet]
@@ -52,8 +55,20 @@ namespace ProyectoLenguajesBaseDatos.Controllers
         public IActionResult GetPerfil()
         {
             var correo = HttpContext.Session.GetString("email");
+            if (correo is null)
+            {
+                return RedirectToAction("GetLogin", "User");
+            }
             var resultado = _userImplement.GetPerfil(correo);
-            return View("Perfil", resultado);
+            var temas = _noticiasImplement.GetTemas();
+            var correos = _userImplement.GetCorreosUsuarios();
+            var viewModel = new ModelPerfil
+            {
+                Correos = correos,
+                Usuario = resultado,
+                Temas = temas,
+            };
+            return View("Perfil", viewModel);
         }
 
         [HttpPost]
@@ -78,6 +93,14 @@ namespace ProyectoLenguajesBaseDatos.Controllers
                 return RedirectToAction("GetPerfil", "User");
             }
             return View("Perfil");
+        }
+
+        [HttpPost]
+        public IActionResult ActualizarPreferencias(string preferenciaCreador, string preferenciaTema)
+        {
+            var correo = HttpContext.Session.GetString("email");
+            var resultado = _userImplement.ActualizarPreferencias(preferenciaCreador, preferenciaTema, correo);
+            return RedirectToAction("GetPerfil", "User");
         }
     }
 }

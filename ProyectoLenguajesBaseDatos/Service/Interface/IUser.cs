@@ -9,5 +9,7 @@ namespace ProyectoLenguajesBaseDatos.Service.Interface
         Usuario GetPerfil(string correo);
         int ActualizarPerfil(string nombre, string apellido, string correo);
         int CambiarPassword(string password, string correo);
+        int ActualizarPreferencias(string preferenciaCreador, string preferenciaTema, string correo);
+        List<string> GetCorreosUsuarios();
     }
 }

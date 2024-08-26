@@ -1,4 +1,4 @@
-﻿@model Noticia
+﻿@model ModelNoticiaComentario
 @{
     ViewData["Title"] = "VerNoticia";
 }
@@ -12,26 +12,41 @@
             <img src="/img/noticia.png" class="card-img-top" alt="...">
             <div class="d-flex flex-column card-body">
                 <div class="d-flex flex-row gap">
-                    <h4 class="card-text">@Model.Tema.Titulo</h4>
-                    <h4 class="card-text">@Model.SubTema.Titulo</h4>
+                    <h4 class="card-text">@Model.Noticia.Tema.Titulo</h4>
+                    <h4 class="card-text">@Model.Noticia.SubTema.Titulo</h4>
                 </div>
                 <br />
-                <h5 class="card-title">@Model.Titulo</h5>
+                <h5 class="card-title">@Model.Noticia.Titulo</h5>
                 <br />
-                <h6 class="card-title">@Model.Sinopsis</h6>
-                <p class="card-text">@Model.Descripcion</p>
-                <p class="card-text">@Model.CorreoUsuarioCreador</p>
+                <h6 class="card-title">@Model.Noticia.Sinopsis</h6>
+                <p class="card-text">@Model.Noticia.Descripcion</p>
+                <p class="card-text">@Model.Noticia.CorreoUsuarioCreador</p>
                 <div class="d-flex gap-3">
-                    <p class="card-text">@Model.FechaPost</p>
+                    <p class="card-text">@Model.Noticia.FechaPost</p>
                 </div>
                 <br />
                 <div class="d-flex gap-3">
-                    <p class="card-text">Calificación Promedio: @Model.CalificacionPromedio <i class="bi bi-star-fill"></i></p>
+                    <p class="card-text">Calificación Promedio: @Model.Noticia.CalificacionPromedio <i class="bi bi-star-fill"></i></p>
                 </div>
                 <br />
                 <div class="d-flex justify-content-center gap mt-auto">
                     <a asp-controller="Noticia" asp-action="Listado" class="btn btn-warning"><i class="bi bi-skip-backward-fill"></i>
                         <br /> Volver</a>
+                </div>
+            </div>
+        </div>
+        <div class="card shadow-lg" style="width: 390px;">
+            <img src="/img/noticia.png" class="card-img-top" alt="...">
+            <div class="d-flex flex-column card-body">
+                <h5 class="card-title">Comentarios de Noticia</h5>
+                <div style="height: 200px; overflow-y: auto;">
+                    @foreach (var comentario in Model.Comentarios)
+                    {
+                        <div class="d-flex gap-3">
+                            <p class="card-text">Creador: @comentario.CorreoUsuario <br />Comentario: @comentario.StringComentario <i class="bi bi-chat-dots"></i></p>
+                            <br />
+                        </div>
+                    }
                 </div>
             </div>
         </div>

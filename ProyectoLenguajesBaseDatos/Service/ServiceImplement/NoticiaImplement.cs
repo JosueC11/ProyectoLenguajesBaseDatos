@@ -912,5 +912,57 @@ namespace ProyectoLenguajesBaseDatos.Service.ServiceImplement
                 return null;
             }
         }
+
+        public List<Comentario> GetComentarios(int idNoticia)
+        {
+            var comentarios = new List<Comentario>();
+            try
+            {
+                using (OracleConnection connection = _context.GetConnection())
+                {
+                    using (OracleCommand cmd = new OracleCommand("PKG_PORTAL.SP_GET_COMENTARIOS_NOTICIAS", connection))
+                    {
+                        var idNoticiaParam = new OracleParameter
+                        {
+                            ParameterName = "ID_NOTICIA_IN",
+                            OracleDbType = OracleDbType.Int32,
+                            Direction = ParameterDirection.Input,
+                            Value = idNoticia
+                        };
+                        cmd.Parameters.Add(idNoticiaParam);
+
+                        var listaComentarios = new OracleParameter
+                        {
+                            ParameterName = "LISTA_COMENTARIOS",
+                            OracleDbType = OracleDbType.RefCursor,
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(listaComentarios);
+
+                        connection.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        OracleDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            var comentario = new Comentario
+                            {
+                                CorreoUsuario = reader["CORREO_USUARIO"].ToString(),
+                                StringComentario = reader["COMENTARIO"].ToString(),
+
+                            };
+                            comentarios.Add(comentario);
+                        }
+                    }
+                }
+                return comentarios;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return null;
+            }
+        }       
     }
 }
