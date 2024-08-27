@@ -406,7 +406,7 @@ namespace ProyectoLenguajesBaseDatos.Service.ServiceImplement
 
                         var correoEnviaParam = new OracleParameter
                         {
-                            ParameterName = "CORREO_USUARIO_DESTINO_IN",
+                            ParameterName = "CORREO_USUARIO_COMPARTE_IN",
                             OracleDbType = OracleDbType.Varchar2,
                             Direction = ParameterDirection.Input,
                             Value = correoEnvia
